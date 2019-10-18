@@ -31,6 +31,11 @@ module.exports = function(RED) {
          */
         this.addImageToGif = function(gif, images, counter) {
             getPixels(images[counter], function(err, pixels) {
+                if (err) {
+                    node.onError(err);
+                    return;
+                }
+
                 gif.addFrame(pixels.data);
                 if (counter === images.length - 1) {
                     gif.finish();
