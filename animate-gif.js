@@ -56,6 +56,8 @@ module.exports = function(RED) {
             msg.repeat = msg.repeat || node.repeat;
 
             try {
+                node.status({ fill: "yellow", shape: "dot", text: "combining" });
+
                 let gif = new GifEncoder(msg.dimensionX, msg.dimensionY);
                 gif.on('readable', function () {
                     msg.payload = gif.read();
@@ -67,7 +69,7 @@ module.exports = function(RED) {
                 gif.setDelay(msg.delay);
                 gif.writeHeader();
 
-                node.addImageToGif(gif, msg.payload.buffers, 0);
+                node.addImageToGif(gif, msg.payload, 0);
             } catch (exception) {
                 node.onError(exception.message);
             }
