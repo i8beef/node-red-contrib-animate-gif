@@ -10,6 +10,7 @@ module.exports = function(RED) {
         this.delay = config.delay;
         this.dimensionX = config.dimensionX;
         this.dimensionY = config.dimensionY;
+        this.mimeType = config.mimeType;
         this.quality = config.quality;
         this.repeat = config.repeat;
 
@@ -29,8 +30,8 @@ module.exports = function(RED) {
         /*
          * Recursive add images to GIF
          */
-        this.addImageToGif = function(gif, images, counter) {
-            getPixels(images[counter], function(err, pixels) {
+        this.addImageToGif = function(gif, images, mimeType, counter) {
+            getPixels(images[counter], mimeType, function(err, pixels) {
                 if (err) {
                     node.onError(err);
                     return;
@@ -40,7 +41,7 @@ module.exports = function(RED) {
                 if (counter === images.length - 1) {
                     gif.finish();
                 } else {
-                    node.addImageToGif(gif, images, ++counter);
+                    node.addImageToGif(gif, images, mimeType, ++counter);
                 }
             });
         };
@@ -57,6 +58,7 @@ module.exports = function(RED) {
             msg.delay = msg.delay || node.delay;
             msg.dimensionX = msg.dimensionX || node.dimensionX;
             msg.dimensionY = msg.dimensionY || node.dimensionY;
+            msg.mimeType = msg.mimeType || node.mimeType;
             msg.quality = msg.quality || node.quality;
             msg.repeat = msg.repeat || node.repeat;
 
@@ -67,6 +69,7 @@ module.exports = function(RED) {
                 gif.on('readable', function () {
                     msg.payload = gif.read();
                     node.send(msg);
+                    node.status({ fill: "green", shape: "dot", text: "idle" });
                 });
 
                 gif.setRepeat(msg.repeat)
@@ -74,7 +77,7 @@ module.exports = function(RED) {
                 gif.setDelay(msg.delay);
                 gif.writeHeader();
 
-                node.addImageToGif(gif, msg.payload, 0);
+                node.addImageToGif(gif, msg.payload, msg.mimeType, 0);
             } catch (exception) {
                 node.onError(exception.message);
             }
