@@ -38,6 +38,10 @@ module.exports = function(RED) {
                 }
 
                 gif.addFrame(pixels.data);
+
+                // Necessary to bypass an issue where frame additions require buffer clearing
+                gif.read();
+
                 if (counter === images.length - 1) {
                     gif.finish();
                 } else {
@@ -65,18 +69,27 @@ module.exports = function(RED) {
             try {
                 node.status({ fill: "yellow", shape: "dot", text: "combining" });
 
-                let gif = new GifEncoder(msg.dimensionX, msg.dimensionY);
-                gif.on('readable', function () {
-                    msg.payload = gif.read();
+                let gifOptions = {
+                  highWaterMark: 2 * 1024 * 1024 // 2MB
+                };
+
+                let gif = new GifEncoder(msg.dimensionX, msg.dimensionY, gifOptions);
+                gif.setRepeat(msg.repeat)
+                gif.setQuality(msg.quality);
+                gif.setDelay(msg.delay);
+
+                const chunks = [];
+                gif.on('data', function (chunk) {
+                    chunks.push(chunk);
+                });
+
+                gif.on('end', function() {
+                    msg.payload = Buffer.concat(chunks);
                     node.send(msg);
                     node.status({ fill: "green", shape: "dot", text: "idle" });
                 });
 
-                gif.setRepeat(msg.repeat)
-                gif.setQuality(msg.quality);
-                gif.setDelay(msg.delay);
                 gif.writeHeader();
-
                 node.addImageToGif(gif, msg.payload, msg.mimeType, 0);
             } catch (exception) {
                 node.onError(exception.message);
