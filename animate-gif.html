@@ -1,0 +1,100 @@
+<script type="text/javascript">
+    RED.nodes.registerType('animate-gif', {
+        category: 'function',
+        color: '#FDD0A2',
+        defaults: {
+            delay: { value: 500 },
+            dimensionX: { value: 100 },
+            dimensionY: { value: 100 },
+            quality: { value: 100 },
+            repeat: { value: true }
+        },
+        inputs:1,
+        outputs:1,
+        icon: "image.png",
+        label: function() {
+            return this.name || "animate-gif";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="animate-gif">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-delay">Delay</label>
+        <input type="text" id="node-input-delay" placeholder="500">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-dimensionX">Dimension X</label>
+        <input type="text" id="node-input-dimensionX" placeholder="100">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-dimensionY">Dimension Y</label>
+        <input type="text" id="node-input-dimensionY" placeholder="100">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-quality">Quality</label>
+        <input type="text" id="node-input-quality" placeholder="100">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-delay">Delay</label>
+        <input type="text" id="node-input-delay" placeholder="500">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-repeat">Repeat</label>
+        <input type="checkbox" id="node-input-repeat">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="animate-gif">
+    <p>Creates an animated GIF from passed in image buffers as frames.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt class="optional">delay <span class="property-type">int</span></dt>
+        <dd> delay between frames in milliseconds.</dd>
+
+        <dt class="optional">dimensionX <span class="property-type">int</span></dt>
+        <dd> size of image X dimension.</dd>
+
+        <dt class="optional">dimensionY <span class="property-type">int</span></dt>
+        <dd> size of image Y dimension.</dd>
+
+        <dt class="optional">quality <span class="property-type">int</span></dt>
+        <dd> image quality from 0 to 100.</dd>
+
+        <dt class="optional">repeat <span class="property-type">bool</span></dt>
+        <dd> whether or not to loop the resulting GIF.</dd>
+        
+        <dt>payload <span class="property-type">array</span></dt>
+        <dd> array of image buffers to use as GIF frames.</dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <li>Standard output
+            <dl class="message-properties">
+                <dt>payload <span class="property-type">buffer</span></dt>
+                <dd>resulting GIF buffer</dd>
+            </dl>
+        </li>
+    </ol>
+    
+    <h3>Details</h3>
+    <p>All settings can be set by incoming <code>msg</code> or in node settings. Specify image dimensions as <code>msg.dimensionX</code> and <code>msg.dimensionY</code>, as well as a quality as <code>msg.quality</code>. Set a delay and repeat option as <code>msg.delay</code> and <code>msg.repeat</code>.</p>
+    <p>Pass image buffers to use as <code>msg.payload</code> array.<p>
+
+    <h3>References</h3>
+    <ul>
+        <li><a href="https://github.com/i8beef/node-red-contrib-animate-gif">GitHub</a> - the nodes github repository</li>
+    </ul>
+</script>
