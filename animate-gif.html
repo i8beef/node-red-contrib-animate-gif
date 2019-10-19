@@ -3,10 +3,10 @@
         category: 'function',
         color: '#FDD0A2',
         defaults: {
-            delay: { value: 500 },
-            dimensionX: { value: 100 },
-            dimensionY: { value: 100 },
-            quality: { value: 100 },
+            delay: { value: 500, validate:RED.validators.number() },
+            dimensionX: { value: 100, validate:RED.validators.number() },
+            dimensionY: { value: 100 , validate:RED.validators.number() },
+            quality: { value: 100, validate:RED.validators.number() },
             repeat: { value: true }
         },
         inputs:1,

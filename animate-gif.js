@@ -31,14 +31,12 @@ module.exports = function(RED) {
          */
         this.addImageToGif = function(gif, buffers, x, y, counter = 0) {
             sharp(buffers[counter])
+                .ensureAlpha()
                 .resize(x, y)
                 .raw()
                 .toBuffer()
                 .then(data => {
                     gif.addFrame(data);
-
-                    // Necessary to bypass an issue where frame additions require buffer clearing
-                    gif.read();
     
                     if (counter === buffers.length - 1) {
                         gif.finish();
@@ -60,10 +58,10 @@ module.exports = function(RED) {
                 msg.payload = [];
             }
 
-            msg.delay = msg.delay || node.delay;
-            msg.dimensionX = msg.dimensionX || node.dimensionX;
-            msg.dimensionY = msg.dimensionY || node.dimensionY;
-            msg.quality = msg.quality || node.quality;
+            msg.delay = parseInt(msg.delay || node.delay);
+            msg.dimensionX = parseInt(msg.dimensionX || node.dimensionX);
+            msg.dimensionY = parseInt(msg.dimensionY || node.dimensionY);
+            msg.quality = parseInt(msg.quality || node.quality);
             msg.repeat = msg.repeat || node.repeat;
 
             if (msg.quality < 1) msg.quality = 1;
