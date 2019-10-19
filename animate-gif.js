@@ -29,7 +29,7 @@ module.exports = function(RED) {
         /*
          * Recursive add images to GIF
          */
-        this.addImagesToGif = function(gif, buffers, x, y, counter = 0) {
+        this.addImageToGif = function(gif, buffers, x, y, counter = 0) {
             sharp(buffers[counter])
                 .resize(x, y)
                 .raw()
