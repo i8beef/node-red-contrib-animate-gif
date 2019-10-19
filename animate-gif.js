@@ -29,9 +29,9 @@ module.exports = function(RED) {
         /*
          * Recursive add images to GIF
          */
-        this.addImagesToGif = function(gif, buffers, counter = 0) {
-            sharp(buffer[counter])
-                .resize(msg.dimensionX, msg.dimensionY)
+        this.addImagesToGif = function(gif, buffers, x, y, counter = 0) {
+            sharp(buffers[counter])
+                .resize(x, y)
                 .raw()
                 .toBuffer()
                 .then(data => {
@@ -43,7 +43,7 @@ module.exports = function(RED) {
                     if (counter === buffers.length - 1) {
                         gif.finish();
                     } else {
-                        node.addImageToGif(gif, buffers, ++counter);
+                        node.addImageToGif(gif, buffers, x, y, ++counter);
                     }
                 })
                 .catch(err => {
@@ -93,7 +93,7 @@ module.exports = function(RED) {
                 });
 
                 gif.writeHeader();
-                node.addImageToGif(gif, msg.payload, 0);
+                node.addImageToGif(gif, msg.payload, msg.dimensionX, msg.dimensionY, 0);
             } catch (exception) {
                 node.onError(exception.message);
             }
