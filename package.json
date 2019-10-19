@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-animate-gif",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Node-red node for combining a set of buffers into an animated gif",
   "main": "animate-gif.js",
   "scripts": {
@@ -24,8 +24,8 @@
   },
   "homepage": "https://github.com/i8beef/node-red-contrib-animate-gif#readme",
   "dependencies": {
-    "get-pixels": "^3.3.2",
-    "gif-encoder": "^0.7.2"
+    "gif-encoder": "^0.7.2",
+    "sharp": "^0.23.1"
   },
   "node-red": {
     "nodes": {

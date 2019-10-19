@@ -1,7 +1,7 @@
 module.exports = function(RED) {
     "use strict";
-    const getPixels = require('get-pixels')
     const GifEncoder = require('gif-encoder');
+    const sharp = require('sharp');
 
     function AnimateGifNode(config) {
         RED.nodes.createNode(this, config);
@@ -10,7 +10,6 @@ module.exports = function(RED) {
         this.delay = config.delay;
         this.dimensionX = config.dimensionX;
         this.dimensionY = config.dimensionY;
-        this.mimeType = config.mimeType;
         this.quality = config.quality;
         this.repeat = config.repeat;
 
@@ -30,24 +29,26 @@ module.exports = function(RED) {
         /*
          * Recursive add images to GIF
          */
-        this.addImageToGif = function(gif, images, mimeType, counter) {
-            getPixels(images[counter], mimeType, function(err, pixels) {
-                if (err) {
+        this.addImagesToGif = function(gif, buffers, counter = 0) {
+            sharp(buffer[counter])
+                .resize(msg.dimensionX, msg.dimensionY)
+                .raw()
+                .toBuffer()
+                .then(data => {
+                    gif.addFrame(data);
+
+                    // Necessary to bypass an issue where frame additions require buffer clearing
+                    gif.read();
+    
+                    if (counter === buffers.length - 1) {
+                        gif.finish();
+                    } else {
+                        node.addImageToGif(gif, buffers, ++counter);
+                    }
+                })
+                .catch(err => {
                     node.onError(err);
-                    return;
-                }
-
-                gif.addFrame(pixels.data);
-
-                // Necessary to bypass an issue where frame additions require buffer clearing
-                gif.read();
-
-                if (counter === images.length - 1) {
-                    gif.finish();
-                } else {
-                    node.addImageToGif(gif, images, mimeType, ++counter);
-                }
-            });
+                });
         };
 
         /*
@@ -62,9 +63,11 @@ module.exports = function(RED) {
             msg.delay = msg.delay || node.delay;
             msg.dimensionX = msg.dimensionX || node.dimensionX;
             msg.dimensionY = msg.dimensionY || node.dimensionY;
-            msg.mimeType = msg.mimeType || node.mimeType;
             msg.quality = msg.quality || node.quality;
             msg.repeat = msg.repeat || node.repeat;
+
+            if (msg.quality < 1) msg.quality = 1;
+            if (msg.quality > 20) msg.quality = 20;
 
             try {
                 node.status({ fill: "yellow", shape: "dot", text: "combining" });
@@ -90,7 +93,7 @@ module.exports = function(RED) {
                 });
 
                 gif.writeHeader();
-                node.addImageToGif(gif, msg.payload, msg.mimeType, 0);
+                node.addImageToGif(gif, msg.payload, 0);
             } catch (exception) {
                 node.onError(exception.message);
             }

@@ -6,7 +6,6 @@
             delay: { value: 500 },
             dimensionX: { value: 100 },
             dimensionY: { value: 100 },
-            mimeType: { value: "image/gif" },
             quality: { value: 100 },
             repeat: { value: true }
         },
@@ -41,16 +40,6 @@
     </div>
 
     <div class="form-row">
-        <label for="node-input-mimeType">MIME Type</label>
-        <select id="node-input-mimeType">
-            <option value="image/bmp">image/bmp</option>
-            <option value="image/gif">image/gif</option>
-            <option value="image/jpeg">image/jpeg</option>
-            <option value="image/png">image/png</option>
-        </select>
-    </div>
-
-    <div class="form-row">
         <label for="node-input-quality">Quality</label>
         <input type="text" id="node-input-quality" placeholder="100">
     </div>
@@ -75,11 +64,8 @@
         <dt class="optional">dimensionY <span class="property-type">int</span></dt>
         <dd> size of image Y dimension.</dd>
 
-        <dt class="optional">mimeType <span class="property-type">string</span></dt>
-        <dd> MIME type of the incoming image buffers.</dd>
-
         <dt class="optional">quality <span class="property-type">int</span></dt>
-        <dd> image quality from 0 to 100.</dd>
+        <dd> image quality from 1 to 20.</dd>
 
         <dt class="optional">repeat <span class="property-type">bool</span></dt>
         <dd> whether or not to loop the resulting GIF.</dd>

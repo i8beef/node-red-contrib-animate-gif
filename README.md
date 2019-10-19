@@ -23,7 +23,7 @@ This package provides a single node, `animate-gif`, which will be under the "fun
   delay: 500,
   dimensionX: 100,
   dimensionY: 100,
-  quality: 100,
+  quality: 20,
   repeat: true,
   payload: [
       Buffer(...)
