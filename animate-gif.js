@@ -75,7 +75,7 @@ module.exports = function(RED) {
                 };
 
                 let gif = new GifEncoder(msg.dimensionX, msg.dimensionY, gifOptions);
-                gif.setRepeat(msg.repeat)
+                gif.setRepeat(msg.repeat == true ? 0 : -1)
                 gif.setQuality(msg.quality);
                 gif.setDelay(msg.delay);
 
