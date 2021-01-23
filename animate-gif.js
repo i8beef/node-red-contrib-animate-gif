@@ -1,8 +1,8 @@
 module.exports = function(RED) {
     "use strict";
     const GifEncoder = require('gif-encoder');
-    const sharp = require('sharp');
-
+    const Jimp = require('jimp');
+   
     function AnimateGifNode(config) {
         RED.nodes.createNode(this, config);
 
@@ -30,12 +30,13 @@ module.exports = function(RED) {
          * Recursive add images to GIF
          */
         this.addImageToGif = function(gif, buffers, x, y, counter = 0) {
-            sharp(buffers[counter])
-                .ensureAlpha()
-                .resize(x, y)
-                .raw()
-                .toBuffer()
-                .then(data => {
+            Jimp.read(buffers[counter])
+                .then(image => {
+                    let data = image
+                        .opaque()
+                        .resize(x, y)
+                        .bitmap.data;
+
                     gif.addFrame(data);
     
                     if (counter === buffers.length - 1) {
